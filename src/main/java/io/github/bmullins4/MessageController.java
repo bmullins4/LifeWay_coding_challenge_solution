@@ -7,24 +7,28 @@ import java.util.Map;
 
 public class MessageController {
     
+    private static long totWords = 0;
+    private static Map<Long, Integer> processedMsgs = new HashMap<Long, Integer>();
+    
     public static long countWords(final Message msg) {
-        
-        long count = 0;
-        
+
         if(msg == null) 
-            return count;
+            return totWords;
         else {
-            String[] words = msg.getMessage().split(" ");
-            count = words.length;
-            return count;
+            if(!processedMsgs.containsKey(msg.getID())) {
+                String[] words = msg.getMessage().split(" ");
+                processedMsgs.put(msg.getID(), words.length);
+                totWords += words.length;
+                return totWords;
+            } else return totWords;
         }
     }
     
     public static Map<String, Object> getOutput(Message msg) {
         
-        long count = countWords(msg);
+        totWords = countWords(msg);
         Map<String, Object> output = new HashMap<String, Object>();
-        output.put("count", count);
+        output.put("count", totWords);
         return output;
     }
 }
